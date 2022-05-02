@@ -76,12 +76,22 @@ public class JpaMain {
 
 //            Member member1 = new Member(150L, "A");
 //            Member member2 = new Member(160L, "B");
-            Member member = em.find(Member.class, 150L); // 영속 엔티티를 조회하고
-            member.setName("ZZZ"); // 값을 변경하기만 하면 변경감지(Dirty Checking)로 자동으로 변경해준다.
+//            Member member = em.find(Member.class, 150L); // 영속 엔티티를 조회하고
+//            member.setName("ZZZ"); // 값을 변경하기만 하면 변경감지(Dirty Checking)로 자동으로 변경해준다.
 
 //            em.persist(member1);
 //            em.persist(member2);
 //            em.remove(member); 삭제
+
+            Member member = new Member(200L, "member200");
+            em.persist(member);
+
+            /* 영속성 컨텍스트를 플러시하는 방법
+             1. em.flush() - 직접 호출
+             2. 트랜잭션 커밋 - 플러시 자동 호출
+             3. JPQL 쿼리 실행 - 플러시 자동 호출
+             */
+            em.flush(); // 이 시점에 DB에 쿼리를 날린다. => 영속성 컨텍스트에 있는 쓰기 지연 SQL 저장소에 있는것들이 DB에 반영이 된다.(영속성 컨텍스트의 변경 내용을 데이터베이스에 동기화한다) => 실질적인 반영은 커밋에서!
 
             System.out.println("=====================");
 
