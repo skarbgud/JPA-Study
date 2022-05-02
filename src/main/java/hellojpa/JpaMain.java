@@ -54,15 +54,36 @@ public class JpaMain {
              */
 
             // 비영속 상태
-            Member member = new Member();
-            member.setId(100L);
+           /* Member member = new Member();
+            member.setId(101L);
             member.setName("HelloJPA");
 
             // 영속 상태
             System.out.println("=== BEFORE ===");
-            em.persist(member);
-            em.detach(member); // 영속성 컨텍스트에서 분리, 준영속 상태
-            System.out.println("=== AFTER ===");
+            em.persist(member); // JPA 1차 캐시에 저장
+//            em.detach(member); // 영속성 컨텍스트에서 분리, 준영속 상태
+            System.out.println("=== AFTER ===");*/
+
+            Member findDbFindMember = em.find(Member.class, 101L);
+            System.out.println("findDbFindMember.id = " + findDbFindMember.getId());
+            System.out.println("findDbFindMember.name = " + findDbFindMember.getName());
+            Member primaryCacheFindMember = em.find(Member.class, 101L);
+            System.out.println("primaryCacheFindMember.id = " + primaryCacheFindMember.getId());
+            System.out.println("primaryCacheFindMember.name = " + primaryCacheFindMember.getName());
+
+            System.out.println("result = " + (findDbFindMember == primaryCacheFindMember)); // 영속 엔티티의 동일성을 보장 해 준다.
+
+
+//            Member member1 = new Member(150L, "A");
+//            Member member2 = new Member(160L, "B");
+            Member member = em.find(Member.class, 150L); // 영속 엔티티를 조회하고
+            member.setName("ZZZ"); // 값을 변경하기만 하면 변경감지(Dirty Checking)로 자동으로 변경해준다.
+
+//            em.persist(member1);
+//            em.persist(member2);
+//            em.remove(member); 삭제
+
+            System.out.println("=====================");
 
             tx.commit();
         } catch (Exception e) {
