@@ -53,7 +53,18 @@ public class JpaMain {
                JPQL을 한마디로 정리하면 객체지향 SQL
              */
 
-           tx.commit();
+            // 비영속 상태
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
+
+            // 영속 상태
+            System.out.println("=== BEFORE ===");
+            em.persist(member);
+            em.detach(member); // 영속성 컨텍스트에서 분리, 준영속 상태
+            System.out.println("=== AFTER ===");
+
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
         } finally {
