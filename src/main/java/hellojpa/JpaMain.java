@@ -104,20 +104,34 @@ public class JpaMain {
 //
 //            System.out.println("=====================");
 
-            Member member = new Member();
-            member.setId(1L);
-            member.setUsername("A");
-            member.setRoleType(RoleType.USER);
+//            Member member = new Member();
+////            member.setId("ID_A");
+//            member.setUsername("C");
 
-            member.setId(2L);
-            member.setUsername("B");
-            member.setRoleType(RoleType.ADMIN);
+            Member member1 = new Member();
+            member1.setUsername("A");
 
-            member.setId(3L);
-            member.setUsername("C");
-            member.setRoleType(RoleType.GUEST);
+            Member member2 = new Member();
+            member1.setUsername("B");
 
-            em.persist(member);
+            Member member3 = new Member();
+            member1.setUsername("C");
+
+            System.out.println("=============");
+
+            // DB SEQ = 1      |  1
+            // DB SEQ = 51     |  2
+            // DB SEQ = 51     |  3
+
+            em.persist(member1);  // 1, 51
+            em.persist(member2);  // MEM
+            em.persist(member3);  // MEM
+
+            System.out.println("member1 = " + member1.getId());
+            System.out.println("member2 = " + member2.getId());
+            System.out.println("member3 = " + member3.getId());
+
+            System.out.println("=============");
 
             tx.commit();
         } catch (Exception e) {

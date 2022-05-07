@@ -6,33 +6,34 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
+@SequenceGenerator(
+        name = "member_seq_generator",
+        sequenceName = "member_seq", // 매핑할 데이터베이스 시퀀스 이름
+        initialValue = 1, allocationSize = 50  // 미리 call next 의 사이즈를 땡겨온다. (메모리에 미리 올려놓는 개념)
+)
+//@TableGenerator(
+//        name = "MEMBER_SEQ_GENERATOR",
+//        table = "MY_SEQUENCES",
+//        pkColumnValue = "MEMBER_SEQ", allocationSize = 1
+//)
 public class Member {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
     private Long id;
+
+    // 기본 키 제약 조건: null 아님, 유일, 변하면 안된다. (비즈니스를 키로 가져오는것은 올바르지 않다)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.TABLE,
+//            generator = "MEMBER_SEQ_GENERATOR")
+//    private Long id;
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
 
     @Column(name = "name", nullable = false, length = 10, columnDefinition = "varchar(100) default 'EMPTY'") // 컬럼
     private String username;
-
-    private Integer age;
-
-    @Enumerated(EnumType.STRING) // enum 타입 매핑 (기본이 ORDINAL) => 순서대로 생성하게 되면 나중에 추가시에 겹치게 된다. [ORDINAL 사용 X]
-    private RoleType roleType;
-
-    @Temporal(TemporalType.TIMESTAMP) // 날짜 타입 매핑
-    private Date createdDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
-
-    private LocalDate testLocalDate;
-    private LocalDateTime testLocalDateTime;
-
-    @Lob // BLOB, CLOB 매핑
-    private String description;
-
-    @Transient // 컬럼 생성 안됨
-    private int temp;
 
     public Member() {
     }
@@ -52,53 +53,4 @@ public class Member {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public RoleType getRoleType() {
-        return roleType;
-    }
-
-    public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getTemp() {
-        return temp;
-    }
-
-    public void setTemp(int temp) {
-        this.temp = temp;
-    }
-
 }
