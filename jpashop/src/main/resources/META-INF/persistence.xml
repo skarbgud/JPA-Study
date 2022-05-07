@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+    <persistence-unit name="hello">
+        <properties>
+            <!-- 필수 속성 -->
+            <!-- javax 는 jpa 표준 -->
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/jpashop"/>
+            <!-- JPA가 어느 DB에도 종속적이기 않기에 방언과 같은 설정을 지원해준다.-->
+            <!--  hibernate는 hibernate 표준 패키지-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+            <!-- 옵션 -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+            <property name="hibernate.jdbc.batch_size" value="10"/>  <!-- 해당 사이즈 만큼 모아서 DB에 넣는다. -->
+            <property name="hibernate.hbm2ddl.auto" value="create" /> <!-- 기존 테이블 삭제 후 다시 생성 (DROP + CREATE) -->
+<!--            <property name="hibernate.hbm2ddl.auto" value="create-drop" /> &lt;!&ndash; create와 같으나 종료시점에 테이블 DROP &ndash;&gt;-->
+<!--            <property name="hibernate.hbm2ddl.auto" value="update" /> &lt;!&ndash; 변경분만 반영 (운영 DB에는 사용하면 안됨) [ALTER, 지우는건 안됨] &ndash;&gt;-->
+<!--            <property name="hibernate.hbm2ddl.auto" value="validate" /> &lt;!&ndash; 엔티티와 테이블이 정상적으로 매핑되었는지만 확인 &ndash;&gt;-->
+<!--            <property name="hibernate.hbm2ddl.auto" value="none" /> &lt;!&ndash; 사용하지 않음 (아무것도 없음) &ndash;&gt;-->
+        </properties>
+    </persistence-unit>
+</persistence>
