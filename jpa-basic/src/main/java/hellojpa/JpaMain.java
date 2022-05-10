@@ -108,30 +108,56 @@ public class JpaMain {
 ////            member.setId("ID_A");
 //            member.setUsername("C");
 
-            Member member1 = new Member();
-            member1.setUsername("A");
+//            Member member1 = new Member();
+//            member1.setUsername("A");
+//
+//            Member member2 = new Member();
+//            member1.setUsername("B");
+//
+//            Member member3 = new Member();
+//            member1.setUsername("C");
+//
+//            System.out.println("=============");
+//
+//            // DB SEQ = 1      |  1
+//            // DB SEQ = 51     |  2
+//            // DB SEQ = 51     |  3
+//
+//            em.persist(member1);  // 1, 51
+//            em.persist(member2);  // MEM
+//            em.persist(member3);  // MEM
+//
+//            System.out.println("member1 = " + member1.getId());
+//            System.out.println("member2 = " + member2.getId());
+//            System.out.println("member3 = " + member3.getId());
+//
+//            System.out.println("=============");
 
-            Member member2 = new Member();
-            member1.setUsername("B");
+            // 저장
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-            Member member3 = new Member();
-            member1.setUsername("C");
+            Member member = new Member();
+            member.setUsername("member1");
+//            member.setTeamId(team.getId());
+            member.setTeam(team);
+            em.persist(member);
 
-            System.out.println("=============");
+            em.flush();
+            em.clear();
 
-            // DB SEQ = 1      |  1
-            // DB SEQ = 51     |  2
-            // DB SEQ = 51     |  3
+            Member findMember = em.find(Member.class, member.getId());
 
-            em.persist(member1);  // 1, 51
-            em.persist(member2);  // MEM
-            em.persist(member3);  // MEM
+//            Long findTeamId = findMember.getTeamId();
+//            Team findTeam = em.find(Team.class, findTeamId);
 
-            System.out.println("member1 = " + member1.getId());
-            System.out.println("member2 = " + member2.getId());
-            System.out.println("member3 = " + member3.getId());
+            Team findTeam = findMember.getTeam(); // 1차 캐시에서 가져오기 때문에 쿼리 호출이 없다
+            System.out.println("findTeam = " + findTeam.getName());
 
-            System.out.println("=============");
+            Team newTeam = em.find(Team.class, 100L);
+            findMember.setTeam(newTeam);
+
 
             tx.commit();
         } catch (Exception e) {
