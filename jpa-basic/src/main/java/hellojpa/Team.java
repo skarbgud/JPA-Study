@@ -1,9 +1,8 @@
 package hellojpa;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Team {
@@ -12,6 +11,9 @@ public class Team {
     @Column(name = "TEAM_ID")
     private Long id;
     private String name;
+
+    @OneToMany(mappedBy = "team") // 1대다로 team에 의해 관리가 된다. (수정은 안되고 조회만 가능하다) | 외래 키가 있는 곳을 주인으로 정해라
+    private List<Member> members = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -27,5 +29,13 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+        this.members = members;
     }
 }

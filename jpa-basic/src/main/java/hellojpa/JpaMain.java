@@ -152,12 +152,17 @@ public class JpaMain {
 //            Long findTeamId = findMember.getTeamId();
 //            Team findTeam = em.find(Team.class, findTeamId);
 
-            Team findTeam = findMember.getTeam(); // 1차 캐시에서 가져오기 때문에 쿼리 호출이 없다
-            System.out.println("findTeam = " + findTeam.getName());
+//            Team findTeam = findMember.getTeam(); // 1차 캐시에서 가져오기 때문에 쿼리 호출이 없다
+//            System.out.println("findTeam = " + findTeam.getName());
+//
+//            Team newTeam = em.find(Team.class, 100L);
+//            findMember.setTeam(newTeam);
 
-            Team newTeam = em.find(Team.class, 100L);
-            findMember.setTeam(newTeam);
+            List<Member> members = findMember.getTeam().getMembers();
 
+            for (Member m : members) {
+                System.out.println("m = " + m.getUsername());
+            }
 
             tx.commit();
         } catch (Exception e) {
