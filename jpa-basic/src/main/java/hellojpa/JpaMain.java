@@ -134,35 +134,35 @@ public class JpaMain {
 //            System.out.println("=============");
 
             // 저장
-            Team team = new Team();
-            team.setName("TeamA");
-//            team.getMembers().add(member);
-            em.persist(team);
-
-            Member member = new Member();
-            member.setUsername("member1");
-//            member.setTeamId(team.getId());
-            // 역방향(주인이 아닌 방향)만 연관관계 설정
-//            member.changeTeam(team); // 연관관계에서 member가 주인이라서 member에 team을 넣어야한다.
-            em.persist(member);
-
-            team.addMember(member);
-
-            // 양방향 매핑시 연관관계 주인에 값에 입력을 해야하지만 (순수한 객체 관계를 고려하면 항상 양쪽다 값을 입력해야 한다.)
-//            team.getMembers().add(member); // -> 연관관계 편의 메소드를 넣어서 실수하지 않도록 한다.
-
-//            em.flush();
-//            em.clear();
-
-            Team findTeam = em.find(Team.class, team.getId()); // 1차 캐시
-            List<Member> members = findTeam.getMembers();
-
-            System.out.println("=============");
-//            for (Member m : members) {
-//                System.out.println("m = " + m.getUsername());
-//            }
-            System.out.println("members = " + findTeam); // => toString() 양방향 매핑시에 무한 루프를 조심하자
-            System.out.println("=============");
+//            Team team = new Team();
+//            team.setName("TeamA");
+////            team.getMembers().add(member);
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("member1");
+////            member.setTeamId(team.getId());
+//            // 역방향(주인이 아닌 방향)만 연관관계 설정
+////            member.changeTeam(team); // 연관관계에서 member가 주인이라서 member에 team을 넣어야한다.
+//            em.persist(member);
+//
+//            team.addMember(member);
+//
+//            // 양방향 매핑시 연관관계 주인에 값에 입력을 해야하지만 (순수한 객체 관계를 고려하면 항상 양쪽다 값을 입력해야 한다.)
+////            team.getMembers().add(member); // -> 연관관계 편의 메소드를 넣어서 실수하지 않도록 한다.
+//
+////            em.flush();
+////            em.clear();
+//
+//            Team findTeam = em.find(Team.class, team.getId()); // 1차 캐시
+//            List<Member> members = findTeam.getMembers();
+//
+//            System.out.println("=============");
+////            for (Member m : members) {
+////                System.out.println("m = " + m.getUsername());
+////            }
+//            System.out.println("members = " + findTeam); // => toString() 양방향 매핑시에 무한 루프를 조심하자
+//            System.out.println("=============");
 
 //            Member findMember = em.find(Member.class, member.getId());
 
@@ -180,6 +180,16 @@ public class JpaMain {
 //            for (Member m : members) {
 //                System.out.println("m = " + m.getUsername());
 //            }
+            Member member = new Member();
+            member.setUsername("member1");
+
+            em.persist(member);
+
+            Team team = new Team();
+            team.setName("teamA");
+            team.getMembers().add(member);
+
+            em.persist(team);
 
             tx.commit();
         } catch (Exception e) {

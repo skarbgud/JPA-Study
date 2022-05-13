@@ -12,13 +12,15 @@ public class Team {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "team") // 1대다로 team에 의해 관리가 된다. (수정은 안되고 조회만 가능하다) | 외래 키가 있는 곳을 주인으로 정해라
+//    @OneToMany(mappedBy = "team") // 1대다로 team에 의해 관리가 된다. (수정은 안되고 조회만 가능하다) | 외래 키가 있는 곳을 주인으로 정해라
+    @OneToMany
+    @JoinColumn(name = "TEAM_ID") // JoinColumn이 없으면 조인 테이블(JoinTable)이 생겨버리니까 지정해주자[중간에 테이블이 추가 생성됨]
     private List<Member> members = new ArrayList<>();
 
-    public void addMember(Member member) {
-        member.setTeam(this);
-        members.add(member);
-    }
+//    public void addMember(Member member) {
+//        member.setTeam(this);
+//        members.add(member);
+//    }
 
     public Long getId() {
         return id;
