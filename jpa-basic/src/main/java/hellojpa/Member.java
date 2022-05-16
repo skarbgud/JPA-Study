@@ -47,6 +47,10 @@ public class Member {
     @JoinColumn(insertable = false, updatable = false) // 이렇게 하면 일대다 양방향 처럼 사용 가능 => 다대일 양방향을 사용하자
     private Team team;
 
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
     public Member() {
     }
 
