@@ -180,16 +180,31 @@ public class JpaMain {
 //            for (Member m : members) {
 //                System.out.println("m = " + m.getUsername());
 //            }
-            Member member = new Member();
-            member.setUsername("member1");
+//            Member member = new Member();
+//            member.setUsername("member1");
+//
+//            em.persist(member);
+//
+//            Team team = new Team();
+//            team.setName("teamA");
+//            team.getMembers().add(member);
+//
+//            em.persist(team);
 
-            em.persist(member);
+            Movie movie = new Movie();
+            movie.setDirector("aaaa");
+            movie.setActor("bbbb");
+            movie.setName("바람과 함께 사라지다");
+            movie.setPrice(10000);
 
-            Team team = new Team();
-            team.setName("teamA");
-            team.getMembers().add(member);
+            em.persist(movie);
 
-            em.persist(team);
+            em.flush();
+            em.clear();
+
+//            Movie findMovie = em.find(Movie.class, movie.getId());
+            Item item = em.find(Item.class, movie.getId()); // InheritanceType.TABLE_PER_CLASS일 경우 모든 테이블을 다 조회해야하기 때문에 상속된 모든 테이블을 union해서 select해서 좋지 X
+            System.out.println("item = " + item);
 
             tx.commit();
         } catch (Exception e) {
