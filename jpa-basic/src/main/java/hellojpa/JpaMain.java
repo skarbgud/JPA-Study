@@ -1,6 +1,7 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -191,20 +192,30 @@ public class JpaMain {
 //
 //            em.persist(team);
 
-            Movie movie = new Movie();
-            movie.setDirector("aaaa");
-            movie.setActor("bbbb");
-            movie.setName("바람과 함께 사라지다");
-            movie.setPrice(10000);
+//            Movie movie = new Movie();
+//            movie.setDirector("aaaa");
+//            movie.setActor("bbbb");
+//            movie.setName("바람과 함께 사라지다");
+//            movie.setPrice(10000);
+//
+//            em.persist(movie);
+//
+//            em.flush();
+//            em.clear();
+//
+////            Movie findMovie = em.find(Movie.class, movie.getId());
+//            Item item = em.find(Item.class, movie.getId()); // InheritanceType.TABLE_PER_CLASS일 경우 모든 테이블을 다 조회해야하기 때문에 상속된 모든 테이블을 union해서 select해서 좋지 X
+//            System.out.println("item = " + item);
 
-            em.persist(movie);
+            Member member = new Member();
+            member.setUsername("user1");
+            member.setCreatedBy("kim");
+            member.setCreatedDate(LocalDateTime.now());
+
+            em.persist(member);
 
             em.flush();
             em.clear();
-
-//            Movie findMovie = em.find(Movie.class, movie.getId());
-            Item item = em.find(Item.class, movie.getId()); // InheritanceType.TABLE_PER_CLASS일 경우 모든 테이블을 다 조회해야하기 때문에 상속된 모든 테이블을 union해서 select해서 좋지 X
-            System.out.println("item = " + item);
 
             tx.commit();
         } catch (Exception e) {
