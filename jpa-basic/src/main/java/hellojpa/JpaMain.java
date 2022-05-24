@@ -207,15 +207,41 @@ public class JpaMain {
 //            Item item = em.find(Item.class, movie.getId()); // InheritanceType.TABLE_PER_CLASS일 경우 모든 테이블을 다 조회해야하기 때문에 상속된 모든 테이블을 union해서 select해서 좋지 X
 //            System.out.println("item = " + item);
 
+//            Member member = new Member();
+//            member.setUsername("user1");
+//            member.setCreatedBy("kim");
+//            member.setCreatedDate(LocalDateTime.now());
+//
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+
+//            Member member = em.find(Member.class, 1L);
+
+//            printMember(member);
+
+//            printMemberAndTeam(member);
+
             Member member = new Member();
-            member.setUsername("user1");
-            member.setCreatedBy("kim");
-            member.setCreatedDate(LocalDateTime.now());
+            member.setUsername("hello");
 
             em.persist(member);
 
             em.flush();
             em.clear();
+
+//            Member findMember = em.find(Member.class, member.getId());
+            Member findMember = em.getReference(Member.class, member.getId());
+            System.out.println("before findMember = " + findMember.getClass()); // 하이버네이트가 만든 가짜 객체
+            System.out.println("findMember.id = " + findMember.getId());
+
+            // 내부적으로 실제 영속성 컨텍스트에 DB를 통해서 실제 Entity를 통해서 타겟을 지정해서 조회를 한다
+            System.out.println("findMember.username = " + findMember.getUsername());
+            // 두번째 조회할 경우 프록시에 값이 세팅이 되어있어서 조회를 더이상 하지 않는다. => 프록시 객체는 처음 사용할 때 한 번만 초기화
+            System.out.println("findMember.username = " + findMember.getUsername());
+
+            System.out.println("after findMember = " + findMember.getClass());
 
             tx.commit();
         } catch (Exception e) {
@@ -227,4 +253,16 @@ public class JpaMain {
 
         emf.close();
     }
+
+//    private static void printMember(Member member) {
+//        System.out.println("member = " + member.getUsername());
+//    }
+//
+//    private static void printMemberAndTeam(Member member) {
+//        String username = member.getUsername();
+//        System.out.println("username = " + username);
+//
+//        Team team = member.getTeam();
+//        System.out.println("team = " + team.getName());
+//    }
 }
