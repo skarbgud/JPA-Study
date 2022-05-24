@@ -254,14 +254,16 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            Member m1 = em.find(Member.class, member1.getId());
+            Member m1 = em.getReference(Member.class, member1.getId());
             System.out.println("m1 = " + m1.getClass());
+            m1.getUsername();
 
             // 이미 멤버를 영속성 컨텍스트에 1차캐시에 있기 때문에 프록시 객체가 아니라 진짜 객체를 조회한다.
             Member reference = em.getReference(Member.class, member1.getId());
             System.out.println("reference = " + reference.getClass());
 
             // JPA에서는 한 트랜잭션 안에서 == 비교할때 TRUE로 보장하기 위해 영속성 컨텍스트에 있는걸로 동일하게 사용
+            // getReference로 조회시에 첫번째도 프록시 두번째도 프록시 객체인데 두개가 같은 객체이다 (== true 보장)
             System.out.println("a == a: " + (m1 == reference));
 
 //            Member m2 = em.find(Member.class, member2.getId());
