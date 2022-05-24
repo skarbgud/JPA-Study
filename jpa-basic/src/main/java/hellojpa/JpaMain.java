@@ -257,13 +257,20 @@ public class JpaMain {
             Member refMember = em.getReference(Member.class, member1.getId());
             System.out.println("refMember = " + refMember.getClass()); // Proxy
 
+            // em.detach 또는 em.clear를 통해서 영속성 컨텍스트를 분리하면 찾을수 없게 된다.
+//            em.detach(refMember);
+            em.clear();
+
+            // could not initialize proxy [hellojpa.Member#1] - no Session 영속성 컨텍스트가 없다는 에러 발생
+            refMember.getUsername();
+
             // 이미 멤버를 영속성 컨텍스트에 1차캐시에 있기 때문에 프록시 객체가 아니라 진짜 객체를 조회한다.
-            Member findMember = em.find(Member.class, member1.getId());
-            System.out.println("findMember = " + findMember.getClass()); // Member가 아니라 Proxy다
+//            Member findMember = em.find(Member.class, member1.getId());
+//            System.out.println("findMember = " + findMember.getClass()); // Member가 아니라 Proxy다
 
             // JPA에서는 한 트랜잭션 안에서 == 비교할때 TRUE로 보장하기 위해 영속성 컨텍스트에 있는걸로 동일하게 사용
             // getReference로 조회시에 첫번째도 프록시 두번째도 프록시 객체인데 두개가 같은 객체이다 (== true 보장)
-            System.out.println("refMember == findMember: " + (refMember == findMember));
+//            System.out.println("refMember == findMember: " + (refMember == findMember));
 
 //            Member m2 = em.find(Member.class, member2.getId());
 //            Member m2 = em.getReference(Member.class, member2.getId());
@@ -272,6 +279,7 @@ public class JpaMain {
 
             tx.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             tx.rollback();
         } finally {
             em.close();
