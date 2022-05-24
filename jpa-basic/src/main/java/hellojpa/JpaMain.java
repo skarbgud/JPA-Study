@@ -247,18 +247,27 @@ public class JpaMain {
             member1.setUsername("member1");
             em.persist(member1);
 
-            Member member2 = new Member();
-            member2.setUsername("member1");
-            em.persist(member2);
+//            Member member2 = new Member();
+//            member2.setUsername("member1");
+//            em.persist(member2);
 
             em.flush();
             em.clear();
 
             Member m1 = em.find(Member.class, member1.getId());
-//            Member m2 = em.find(Member.class, member2.getId());
-            Member m2 = em.getReference(Member.class, member2.getId());
+            System.out.println("m1 = " + m1.getClass());
 
-            logic(m1, m2);
+            // 이미 멤버를 영속성 컨텍스트에 1차캐시에 있기 때문에 프록시 객체가 아니라 진짜 객체를 조회한다.
+            Member reference = em.getReference(Member.class, member1.getId());
+            System.out.println("reference = " + reference.getClass());
+
+            // JPA에서는 한 트랜잭션 안에서 == 비교할때 TRUE로 보장하기 위해 영속성 컨텍스트에 있는걸로 동일하게 사용
+            System.out.println("a == a: " + (m1 == reference));
+
+//            Member m2 = em.find(Member.class, member2.getId());
+//            Member m2 = em.getReference(Member.class, member2.getId());
+
+//            logic(m1, m2);
 
             tx.commit();
         } catch (Exception e) {
@@ -271,12 +280,12 @@ public class JpaMain {
         emf.close();
     }
 
-    private static void logic(Member m1, Member m2) {
-//        System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass()));
-        // == 비교 대신 instance of 사용
-        System.out.println("m1 == m2: " + (m1 instanceof Member));
-        System.out.println("m1 == m2: " + (m2 instanceof Member));
-    }
+//    private static void logic(Member m1, Member m2) {
+////        System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass()));
+//        // == 비교 대신 instance of 사용
+//        System.out.println("m1 == m2: " + (m1 instanceof Member));
+//        System.out.println("m1 == m2: " + (m2 instanceof Member));
+//    }
 
 //    private static void printMember(Member member) {
 //        System.out.println("member = " + member.getUsername());
