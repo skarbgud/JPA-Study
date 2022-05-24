@@ -1,5 +1,7 @@
 package hellojpa;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -257,12 +259,20 @@ public class JpaMain {
             Member refMember = em.getReference(Member.class, member1.getId());
             System.out.println("refMember = " + refMember.getClass()); // Proxy
 
+//            refMember.getUsername(); // 강제 초기화
+
+            Hibernate.initialize(refMember); // 프록시 강제 초기화
+
+            // 프록시 인스턴스 초기화 여부 확인
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
+
+
             // em.detach 또는 em.clear를 통해서 영속성 컨텍스트를 분리하면 찾을수 없게 된다.
 //            em.detach(refMember);
-            em.clear();
+//            em.clear();
 
             // could not initialize proxy [hellojpa.Member#1] - no Session 영속성 컨텍스트가 없다는 에러 발생
-            refMember.getUsername();
+//            refMember.getUsername();
 
             // 이미 멤버를 영속성 컨텍스트에 1차캐시에 있기 때문에 프록시 객체가 아니라 진짜 객체를 조회한다.
 //            Member findMember = em.find(Member.class, member1.getId());
