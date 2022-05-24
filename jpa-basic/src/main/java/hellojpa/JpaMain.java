@@ -223,25 +223,42 @@ public class JpaMain {
 
 //            printMemberAndTeam(member);
 
-            Member member = new Member();
-            member.setUsername("hello");
+//            Member member = new Member();
+//            member.setUsername("hello");
+//
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+//
+////            Member findMember = em.find(Member.class, member.getId());
+//            Member findMember = em.getReference(Member.class, member.getId());
+//            System.out.println("before findMember = " + findMember.getClass()); // 하이버네이트가 만든 가짜 객체
+//            System.out.println("findMember.id = " + findMember.getId());
+//
+//            // 내부적으로 실제 영속성 컨텍스트에 DB를 통해서 실제 Entity를 통해서 타겟을 지정해서 조회를 한다
+//            System.out.println("findMember.username = " + findMember.getUsername());
+//            // 두번째 조회할 경우 프록시에 값이 세팅이 되어있어서 조회를 더이상 하지 않는다. => 프록시 객체는 처음 사용할 때 한 번만 초기화
+//            System.out.println("findMember.username = " + findMember.getUsername());
+//
+//            System.out.println("after findMember = " + findMember.getClass());
 
-            em.persist(member);
+            Member member1 = new Member();
+            member1.setUsername("member1");
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("member1");
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-//            Member findMember = em.find(Member.class, member.getId());
-            Member findMember = em.getReference(Member.class, member.getId());
-            System.out.println("before findMember = " + findMember.getClass()); // 하이버네이트가 만든 가짜 객체
-            System.out.println("findMember.id = " + findMember.getId());
+            Member m1 = em.find(Member.class, member1.getId());
+//            Member m2 = em.find(Member.class, member2.getId());
+            Member m2 = em.getReference(Member.class, member2.getId());
 
-            // 내부적으로 실제 영속성 컨텍스트에 DB를 통해서 실제 Entity를 통해서 타겟을 지정해서 조회를 한다
-            System.out.println("findMember.username = " + findMember.getUsername());
-            // 두번째 조회할 경우 프록시에 값이 세팅이 되어있어서 조회를 더이상 하지 않는다. => 프록시 객체는 처음 사용할 때 한 번만 초기화
-            System.out.println("findMember.username = " + findMember.getUsername());
-
-            System.out.println("after findMember = " + findMember.getClass());
+            logic(m1, m2);
 
             tx.commit();
         } catch (Exception e) {
@@ -252,6 +269,13 @@ public class JpaMain {
         }
 
         emf.close();
+    }
+
+    private static void logic(Member m1, Member m2) {
+//        System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass()));
+        // == 비교 대신 instance of 사용
+        System.out.println("m1 == m2: " + (m1 instanceof Member));
+        System.out.println("m1 == m2: " + (m2 instanceof Member));
     }
 
 //    private static void printMember(Member member) {
