@@ -41,13 +41,13 @@ public class Member extends BaseEntity{
 //    @Column(name = "TEAM_ID")
 //    private Long teamId;
 
-//    @ManyToOne // 멤버입장에서는 Member는 N, Team 입장에서는 1로 N:1관계이다.
-//    @JoinColumn(name = "TEAM_ID")
-//    private Team team;
-
-    @ManyToOne
-    @JoinColumn(insertable = false, updatable = false) // 이렇게 하면 일대다 양방향 처럼 사용 가능 => 다대일 양방향을 사용하자
+    @ManyToOne(fetch = FetchType.LAZY) // 멤버입장에서는 Member는 N, Team 입장에서는 1로 N:1관계이다.
+    @JoinColumn(name = "TEAM_ID")
     private Team team;
+
+//    @ManyToOne
+//    @JoinColumn(insertable = false, updatable = false) // 이렇게 하면 일대다 양방향 처럼 사용 가능 => 다대일 양방향을 사용하자
+//    private Team team;
 
 //    @OneToOne
 //    @JoinColumn(name = "LOCKER_ID")
