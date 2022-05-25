@@ -301,10 +301,11 @@ public class JpaMain {
 
             Member m = em.find(Member.class, member1.getId());
 
-            System.out.println("m = " + m.getTeam().getClass());
+            System.out.println("m = " + m.getTeam().getClass()); // 즉시 로딩시에는 프록시가 아니라 진짜 객체, 지연 로딩의 경우 프록시 객체
 
             // 실제 team을 사용하는 시점에 초기화
             System.out.println("========");
+            System.out.println("teamName = " + m.getTeam().getName()); // 즉시 로딩시 쿼리 조회 X
             m.getTeam().getName(); // 초기화
             System.out.println("========");
 

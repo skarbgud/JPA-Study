@@ -41,7 +41,7 @@ public class Member extends BaseEntity{
 //    @Column(name = "TEAM_ID")
 //    private Long teamId;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 멤버입장에서는 Member는 N, Team 입장에서는 1로 N:1관계이다.
+    @ManyToOne(fetch = FetchType.EAGER) // 멤버입장에서는 Member는 N, Team 입장에서는 1로 N:1관계이다.
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
