@@ -291,23 +291,40 @@ public class JpaMain {
             team.setName("teamA");
             em.persist(team);
 
+            Team teamB = new Team();
+            team.setName("teamB");
+            em.persist(teamB);
+
             Member member1 = new Member();
             member1.setUsername("member1");
             member1.setTeam(team);
             em.persist(member1);
 
+            Member member2 = new Member();
+            member2.setUsername("member1");
+            member2.setTeam(teamB);
+            em.persist(member2);
+
             em.flush();
             em.clear();
 
-            Member m = em.find(Member.class, member1.getId());
+//            Member m = em.find(Member.class, member1.getId());
+//
+//            System.out.println("m = " + m.getTeam().getClass()); // 즉시 로딩시에는 프록시가 아니라 진짜 객체, 지연 로딩의 경우 프록시 객체
+//
+//            // 실제 team을 사용하는 시점에 초기화
+//            System.out.println("========");
+//            System.out.println("teamName = " + m.getTeam().getName()); // 즉시 로딩시 쿼리 조회 X
+//            m.getTeam().getName(); // 초기화
+//            System.out.println("========");
 
-            System.out.println("m = " + m.getTeam().getClass()); // 즉시 로딩시에는 프록시가 아니라 진짜 객체, 지연 로딩의 경우 프록시 객체
+            // 즉시 로딩의 문제 => jpql로 질의시 해당 객체에 EAGER를 보고 team을 조회해서 값을 찾기 때문에 team을 조회하는 쿼리도 나가게 된다.
+            // 쿼리를 하나 날렸는데 추가적인 쿼리가 하나 더 나가게 된다(각 where 조건에 맞는 team을 조회하기 때문) [N+1 문제]
+//            List<Member> members = em.createQuery("select m from Member m", Member.class)
+//                    .getResultList();
 
-            // 실제 team을 사용하는 시점에 초기화
-            System.out.println("========");
-            System.out.println("teamName = " + m.getTeam().getName()); // 즉시 로딩시 쿼리 조회 X
-            m.getTeam().getName(); // 초기화
-            System.out.println("========");
+            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
+                    .getResultList();
 
             tx.commit();
         } catch (Exception e) {
