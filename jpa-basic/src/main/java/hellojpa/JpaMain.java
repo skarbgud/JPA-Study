@@ -334,12 +334,16 @@ public class JpaMain {
             parent.addChild(child2);
 
             em.persist(parent);
+            em.persist(child1);
+            em.persist(child2);
 
             em.flush();
             em.clear();
 
             Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildList().remove(0);
+//            findParent.getChildList().remove(0);
+            // 부모 객체를 지우게 되면 자식 객체들도 삭제 쿼리가 나간다
+            em.remove(findParent);
 
             // cascade를 ALL로 선언하면 자식것들도 persist가 된다
 //            em.persist(child1);
