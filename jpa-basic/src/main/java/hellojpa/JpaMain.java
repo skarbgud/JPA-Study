@@ -334,16 +334,23 @@ public class JpaMain {
             parent.addChild(child2);
 
             em.persist(parent);
-            em.persist(child1);
-            em.persist(child2);
 
             em.flush();
             em.clear();
 
             Parent findParent = em.find(Parent.class, parent.getId());
-//            findParent.getChildList().remove(0);
+            findParent.getChildList().remove(0);
+            /*
+
+            cascade = CascadeType.ALL + orphanRemoval = true
+            - 스스로 생명주기를 관리하는 엔티티는 em.persist()로 영속화,
+            em.remove()로 제거
+            - 두 옵션을 모두 활성화 하면 부모 엔티티를 통해서 자식의 생명 주기를 관리할 수 있음
+            - 도매인 주도 설계(DDD)의 Aggreate Root 개념을 구현할 때 유요
+
+             */
             // 부모 객체를 지우게 되면 자식 객체들도 삭제 쿼리가 나간다
-            em.remove(findParent);
+//            em.remove(findParent);
 
             // cascade를 ALL로 선언하면 자식것들도 persist가 된다
 //            em.persist(child1);
