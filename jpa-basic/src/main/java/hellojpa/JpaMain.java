@@ -356,12 +356,33 @@ public class JpaMain {
 //            em.persist(child1);
 //            em.persist(child2);
 
-            Member member = new Member();
-            member.setUsername("hello");
-            member.setHomeAddress(new Address("city", "street", "10000"));
-            member.setWorkPeriod(new Period());
+//            Member member = new Member();
+//            member.setUsername("hello");
+//            member.setHomeAddress(new Address("city", "street", "10000"));
+//            member.setWorkPeriod(new Period());
 
+            Address address = new Address("city", "street", "10000");
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(address);
             em.persist(member);
+
+            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
+
+            // 객체 자체를 통으로 바꾼다.
+            member.setHomeAddress(newAddress);
+
+            // 값 타입의 실제 인스턴스를 복사해서 사용
+//            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+//
+//            Member member2 = new Member();
+//            member2.setUsername("member2");
+//            member2.setHomeAddress(copyAddress);
+//            em.persist(member2);
+
+            // setter를 제한해버리면 사용할 수 없다
+//            member.getHomeAddress().setCity("newCity");
 
             tx.commit();
         } catch (Exception e) {

@@ -49,16 +49,16 @@ public class Member {
     private Address homeAddress;
 
     // 회사 주소
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "city",
-                    column = @Column(name = "WORK_CITY")),
-            @AttributeOverride(name = "street",
-                    column = @Column(name = "WORK_STREET")),
-            @AttributeOverride(name = "zipcode",
-                    column = @Column(name = "WORK_ZIP"))
-    })
-    private Address workAddress;
+//    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "city",
+//                    column = @Column(name = "WORK_CITY")),
+//            @AttributeOverride(name = "street",
+//                    column = @Column(name = "WORK_STREET")),
+//            @AttributeOverride(name = "zipcode",
+//                    column = @Column(name = "WORK_ZIP"))
+//    })
+//    private Address workAddress;
 
 //    @Column(name = "TEAM_ID")
 //    private Long teamId;
