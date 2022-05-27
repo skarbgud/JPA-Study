@@ -326,7 +326,7 @@ public class JpaMain {
 //            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
 //                    .getResultList();
 
-            Child child1 = new Child();
+            /*Child child1 = new Child();
             Child child2 = new Child();
 
             Parent parent = new Parent();
@@ -339,7 +339,7 @@ public class JpaMain {
             em.clear();
 
             Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildList().remove(0);
+            findParent.getChildList().remove(0);*/
             /*
 
             cascade = CascadeType.ALL + orphanRemoval = true
@@ -355,6 +355,13 @@ public class JpaMain {
             // cascade를 ALL로 선언하면 자식것들도 persist가 된다
 //            em.persist(child1);
 //            em.persist(child2);
+
+            Member member = new Member();
+            member.setUsername("hello");
+            member.setHomeAddress(new Address("city", "street", "10000"));
+            member.setWorkPeriod(new Period());
+
+            em.persist(member);
 
             tx.commit();
         } catch (Exception e) {
