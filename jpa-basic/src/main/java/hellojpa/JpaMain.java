@@ -385,46 +385,63 @@ public class JpaMain {
             // setter를 제한해버리면 사용할 수 없다
 //            member.getHomeAddress().setCity("newCity");
 
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setHomeAddress(new Address("homeCity", "street", "10000"));
+//            Member member = new Member();
+//            member.setUsername("member1");
+//            member.setHomeAddress(new Address("homeCity", "street", "10000"));
+//
+//            member.getFavoriteFoods().add("치킨");
+//            member.getFavoriteFoods().add("족발");
+//            member.getFavoriteFoods().add("피자");
+//
+//            member.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
+//            member.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
+//
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+//
+//            System.out.println("============= START =============");
+//            Member findMember = em.find(Member.class, member.getId());
+//            System.out.println("============= END =============");
+//
+//            List<AddressEntity> addressHistory = findMember.getAddressHistory();
+//            for (AddressEntity address : addressHistory) {
+//                System.out.println("address() = " + address.getAddress().getCity());
+//            }
+//
+//            Set<String> favoriteFoods = findMember.getFavoriteFoods();
+//            for (String favoriteFood : favoriteFoods) {
+//                System.out.println("favoriteFood = " + favoriteFood);
+//            }
+//
+//            // homeCity -> newCity
+//            Address a = findMember.getHomeAddress();
+//            findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+//
+//            // 치킨 -> 한식
+//            findMember.getFavoriteFoods().remove("치킨");
+//            findMember.getFavoriteFoods().add("한식");
+//
+//            findMember.getAddressHistory().remove(new AddressEntity("old1", "street", "10000")); // eqauls 동작 / 모든 테이블 데이터를 제거 후에 갈아 끼워짐
+//            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street", "10000"));
 
-            member.getFavoriteFoods().add("치킨");
-            member.getFavoriteFoods().add("족발");
-            member.getFavoriteFoods().add("피자");
+            Member member1 = new Member();
+            member1.setUsername("member1");
+            em.persist(member1);
 
-            member.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
-            member.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
+            Member member2 = new Member();
+            member2.setUsername("member2");
+            em.persist(member2);
 
-            em.persist(member);
+            List<Member> result = em.createQuery(
+                    "select m from Member m where m.username like '%1%'",
+                    Member.class
+            ).getResultList();
 
-            em.flush();
-            em.clear();
-
-            System.out.println("============= START =============");
-            Member findMember = em.find(Member.class, member.getId());
-            System.out.println("============= END =============");
-
-            List<AddressEntity> addressHistory = findMember.getAddressHistory();
-            for (AddressEntity address : addressHistory) {
-                System.out.println("address() = " + address.getAddress().getCity());
+            for (Member member : result) {
+                System.out.println("member = " + member);
             }
-
-            Set<String> favoriteFoods = findMember.getFavoriteFoods();
-            for (String favoriteFood : favoriteFoods) {
-                System.out.println("favoriteFood = " + favoriteFood);
-            }
-
-            // homeCity -> newCity
-            Address a = findMember.getHomeAddress();
-            findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
-
-            // 치킨 -> 한식
-            findMember.getFavoriteFoods().remove("치킨");
-            findMember.getFavoriteFoods().add("한식");
-
-            findMember.getAddressHistory().remove(new AddressEntity("old1", "street", "10000")); // eqauls 동작 / 모든 테이블 데이터를 제거 후에 갈아 끼워짐
-            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street", "10000"));
 
             tx.commit();
         } catch (Exception e) {
