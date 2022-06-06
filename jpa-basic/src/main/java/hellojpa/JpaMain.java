@@ -3,6 +3,9 @@ package hellojpa;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -426,22 +429,39 @@ public class JpaMain {
 //            findMember.getAddressHistory().remove(new AddressEntity("old1", "street", "10000")); // eqauls 동작 / 모든 테이블 데이터를 제거 후에 갈아 끼워짐
 //            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street", "10000"));
 
-            Member member1 = new Member();
-            member1.setUsername("member1");
-            em.persist(member1);
+//            Member member1 = new Member();
+//            member1.setUsername("member1");
+//            em.persist(member1);
+//
+//            Member member2 = new Member();
+//            member2.setUsername("member2");
+//            em.persist(member2);
+//
+//            List<Member> result = em.createQuery(
+//                    "select m from Member m where m.username like '%1%'",
+//                    Member.class
+//            ).getResultList();
+//
+//            for (Member member : result) {
+//                System.out.println("member = " + member);
+//            }
 
-            Member member2 = new Member();
-            member2.setUsername("member2");
-            em.persist(member2);
+            // Criteria 사용 준비
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
 
-            List<Member> result = em.createQuery(
-                    "select m from Member m where m.username like '%1%'",
-                    Member.class
-            ).getResultList();
+            Root<Member> m = query.from(Member.class);
 
-            for (Member member : result) {
-                System.out.println("member = " + member);
+            CriteriaQuery<Member> cq = query.select(m);
+
+            String username = "kim";
+
+            if (username != null) {
+                cq = cq.where(cb.equal(m.get("username"), username));
             }
+
+            List<Member> resultList = em.createQuery(cq)
+                    .getResultList();
 
             tx.commit();
         } catch (Exception e) {
