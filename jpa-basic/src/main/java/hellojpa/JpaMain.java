@@ -463,8 +463,18 @@ public class JpaMain {
 //            List<Member> resultList = em.createQuery(cq)
 //                    .getResultList();
 
-            em.createNativeQuery("select MEMBER_ID, city, street, zipcode, USERNAME from MEMBER")
+            Member member = new Member();
+            member.setUsername("member1");
+            em.persist(member);
+
+            // flush -> commit, query
+
+            List<Member> resultList = em.createNativeQuery("select MEMBER_ID, city, street, zipcode, USERNAME from MEMBER", Member.class)
                     .getResultList();
+
+            for (Member member1 :resultList) {
+                System.out.println("member1 = " + member1);
+            }
 
             tx.commit();
         } catch (Exception e) {
