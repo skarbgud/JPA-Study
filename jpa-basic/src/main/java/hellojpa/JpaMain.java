@@ -447,20 +447,23 @@ public class JpaMain {
 //            }
 
             // Criteria 사용 준비
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+//            CriteriaBuilder cb = em.getCriteriaBuilder();
+//            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+//
+//            Root<Member> m = query.from(Member.class);
+//
+//            CriteriaQuery<Member> cq = query.select(m);
+//
+//            String username = "kim";
+//
+//            if (username != null) {
+//                cq = cq.where(cb.equal(m.get("username"), username));
+//            }
+//
+//            List<Member> resultList = em.createQuery(cq)
+//                    .getResultList();
 
-            Root<Member> m = query.from(Member.class);
-
-            CriteriaQuery<Member> cq = query.select(m);
-
-            String username = "kim";
-
-            if (username != null) {
-                cq = cq.where(cb.equal(m.get("username"), username));
-            }
-
-            List<Member> resultList = em.createQuery(cq)
+            em.createNativeQuery("select MEMBER_ID, city, street, zipcode, USERNAME from MEMBER")
                     .getResultList();
 
             tx.commit();
