@@ -46,13 +46,13 @@ public class JpaMain {
                     .getSingleResult();
             System.out.println("paramQuery = " + paramQuery.getUsername());*/
 
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setAge(10);
-            em.persist(member);
-
-            em.flush();
-            em.clear();
+//            Member member = new Member();
+//            member.setUsername("member1");
+//            member.setAge(10);
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
 
             // m은 엔티티이다. => result는 엔티티들
             // 영속성 컨텍스트로 관리가 된다.
@@ -87,13 +87,32 @@ public class JpaMain {
 //            System.out.println("age = " + result[1]);
 
             // 3. new 명령어로 조회
-            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m")
-                            .getResultList();
+//            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m")
+//                            .getResultList();
+//
+//            MemberDTO memberDTO = resultList.get(0);
+//            System.out.println("memberDTO.getUsername() = " + memberDTO.getUsername());
+//            System.out.println("memberDTO.getAge() = " + memberDTO.getAge());
 
-            MemberDTO memberDTO = resultList.get(0);
-            System.out.println("memberDTO.getUsername() = " + memberDTO.getUsername());
-            System.out.println("memberDTO.getAge() = " + memberDTO.getAge());
+            for (int i = 0; i < 100; i++) {
+                Member member = new Member();
+                member.setUsername("member" + i);
+                member.setAge(i);
+                em.persist(member);
+            }
 
+            em.flush();
+            em.clear();
+
+            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(1) // 몇번째부터
+                    .setMaxResults(10) // 몇개 가져올거야
+                    .getResultList();
+
+            System.out.println("result.size = " + result.size());
+            for (Member member1 : result) {
+                System.out.println("member1 = " + member1);
+            }
 
             tx.commit();
         } catch (Exception e) {
