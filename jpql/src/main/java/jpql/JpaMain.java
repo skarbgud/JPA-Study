@@ -12,7 +12,7 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
+           /* Member member = new Member();
             member.setUsername("member1");
             member.setAge(10);
             em.persist(member);
@@ -44,7 +44,56 @@ public class JpaMain {
             Member paramQuery = em.createQuery("select m from Member m where m.username = :username", Member.class)
                     .setParameter("username", "member1")
                     .getSingleResult();
-            System.out.println("paramQuery = " + paramQuery.getUsername());
+            System.out.println("paramQuery = " + paramQuery.getUsername());*/
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setAge(10);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            // m은 엔티티이다. => result는 엔티티들
+            // 영속성 컨텍스트로 관리가 된다.
+//            List<Member> result = em.createQuery("select m from Member m", Member.class)
+//                            .getResultList();
+
+//            Member findMember = result.get(0);
+//            findMember.setAge(20);
+
+            // 임베디드 타입 프로젝션
+//            em.createQuery("select o.address from Order o", Address.class)
+//                    .getResultList();
+
+            // 스칼라 타입 프로젝션
+
+            // 프로젝션 - 여러값 조회
+            // 1. Query 타입으로 조회
+//            List resultList = em.createQuery("select distinct m.username, m.age from Member m")
+//                    .getResultList();
+//
+//            Object o = resultList.get(0);
+//            Object[] result = (Object[]) o;
+//            System.out.println("username = " + result[0]);
+//            System.out.println("age = " + result[1]);
+
+            // 2. Object[] 타입으로 조회
+//            List<Object[]> resultList = em.createQuery("select distinct m.username, m.age from Member m")
+//                            .getResultList();
+//
+//            Object[] result = resultList.get(0);
+//            System.out.println("username = " + result[0]);
+//            System.out.println("age = " + result[1]);
+
+            // 3. new 명령어로 조회
+            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m")
+                            .getResultList();
+
+            MemberDTO memberDTO = resultList.get(0);
+            System.out.println("memberDTO.getUsername() = " + memberDTO.getUsername());
+            System.out.println("memberDTO.getAge() = " + memberDTO.getAge());
+
 
             tx.commit();
         } catch (Exception e) {
