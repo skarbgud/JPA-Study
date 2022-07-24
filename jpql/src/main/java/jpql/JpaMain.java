@@ -108,6 +108,7 @@ public class JpaMain {
             Member member = new Member();
             member.setUsername("teamA");
             member.setAge(10);
+            member.setType(MemberType.ADMIN);
 
             member.setTeam(team);
 
@@ -123,21 +124,35 @@ public class JpaMain {
             // 1. 조인 대상 필터링
 //            String query = "select m from Member m left join m.team t on t.name = 'teamA'";
             // 2. 연관관계 없는 엔티티 외부 조인
-            String query = "select (select avg(m1.age) from Member m1) as avgAge from Member m left join Team t ON m.username = t.name";
+//            String query = "select m from Member m left join Team t ON m.username = t.name";
 
             // 서브쿼리 예시
 //            String query = "select (select avg(m1.age) from Member m1) as avgAge from Member m left join Team t ON m.username = t.name";
             // FROM 절에서는 서브쿼리가 동작하지 않는다.
 
-            List<Member> result = em.createQuery(query, Member.class)
-                    .getResultList();
-
-            System.out.println("result.size() = " + result.size());
+//            List<Member> result = em.createQuery(query, Member.class)
+//                    .getResultList();
+//
+//            System.out.println("result.size() = " + result.size());
 
 //            System.out.println("result.size = " + result.size());
 //            for (Member member1 : result) {
 //                System.out.println("member1 = " + member1);
 //            }
+
+//            String query = "select m.username, 'HELLo', true FROM Member m " +
+//                    "where m.type = jpql.MemberType.ADMIN";
+            String query = "select m.username, 'HELLo', true FROM Member m " +
+                    "where m.type = :userType";
+            List<Object[]> result = em.createQuery(query)
+                    .setParameter("userType", MemberType.ADMIN)
+                    .getResultList();
+
+            for (Object[] objects : result) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
+            }
 
             tx.commit();
         } catch (Exception e) {
