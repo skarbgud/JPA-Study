@@ -110,9 +110,15 @@ public class JpaMain {
             member.setAge(10);
             member.setType(MemberType.ADMIN);
 
+            Member member2 = new Member();
+            member2.setUsername("관리자2");
+            member2.setAge(10);
+            member2.setType(MemberType.ADMIN);
+
             member.setTeam(team);
 
             em.persist(member);
+            em.persist(member2);
 
             em.flush();
             em.clear();
@@ -154,24 +160,38 @@ public class JpaMain {
 //                System.out.println("objects[2] = " + objects[2]);
 //            }
 
-            String caseQuery =
-                    "select " +
-                            "case when m.age <= 10 then '학생요금' " +
-                            "     when m.age >=60  then '경로요금' " +
-                            "     else '일반요금' " +
-                            "end " +
-                    "from Member m";
-            String coalesceQuery = "select coalesce(m.username, '이름 없는 회원')" +
-                    " as username from Member m";
-            String nullifQuery = "select nullif(m.username, '관리자') as username " +
-                    "from Member m";
+//            String caseQuery =
+//                    "select " +
+//                            "case when m.age <= 10 then '학생요금' " +
+//                            "     when m.age >=60  then '경로요금' " +
+//                            "     else '일반요금' " +
+//                            "end " +
+//                    "from Member m";
+//            String coalesceQuery = "select coalesce(m.username, '이름 없는 회원')" +
+//                    " as username from Member m";
+//            String nullifQuery = "select nullif(m.username, '관리자') as username " +
+//                    "from Member m";
+//
+//            List<String> result = em.createQuery (nullifQuery , String.class)
+//                            .getResultList();
+//
+//            for (String s : result) {
+//                System.out.println("s = " + s);
+//            }
 
-            List<String> result = em.createQuery (nullifQuery , String.class)
+//            String functionQuery = "select concat('a', 'b') from Member m";
+//            String functionQuery = "select substring(m.username, 2, 3) from Member m";
+//            String functionQuery = "select locate('de','abcdefg') from Member m";
+//            String functionQuery = "select function('group_concat', m.username) from Member m";
+            String functionQuery = "select group_concat(m.username) from Member m";
+
+            List<String> result = em.createQuery (functionQuery , String.class)
                             .getResultList();
 
             for (String s : result) {
                 System.out.println("s = " + s);
             }
+
 
             tx.commit();
         } catch (Exception e) {
