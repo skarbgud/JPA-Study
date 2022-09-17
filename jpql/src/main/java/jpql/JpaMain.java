@@ -1,6 +1,7 @@
 package jpql;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 public class JpaMain {
@@ -192,26 +193,48 @@ public class JpaMain {
 //                System.out.println("s = " + s);
 //            }
 
+            Team team = new Team();
+            em.persist(team);
+
             Member member1 = new Member();
             member1.setUsername("관리자1");
+            member1.setTeam(team);
             em.persist(member1);
 
             Member member2 = new Member();
             member2.setUsername("관리자2");
+            member2.setTeam(team);
             em.persist(member2);
 
             em.flush();
             em.clear();
 
             // 단일 값 연관 경로 : 묵시적 내부 조인(inner join) 발생, 탐색 O
-            String query = "select m.team From Member m";
+            // 컬렉션 값 연관 경로 : 묵시적 내부 조인 발생, 탐색 X
+
+            // 묵시적 내부 조인 쿼리
+//            String query = "select t.members From Team t";
+            // 명시적 조인 사용 해야함 -> FROM 절에서 명시적 조인을 통해 별칭을 얻으면 별칭을 통해 탐색 가능
+            String query = "select m.username From Team t join t.members m";
+
+//            String query = "select t.members.size From Team t";
             
-            List<Team> result = em.createQuery(query, Team.class)
-                            .getResultList();
+//            List<Collection> result = em.createQuery(query, Collection.class)
+//                            .getResultList();
+//            Integer result = em.createQuery(query, Integer.class)
+//                    .getSingleR esult();
+            List<String> result = em.createQuery(query, String.class)
+                    .getResultList();
             
-            for (Team s : result) {
+//            for (Object o : result) {
+//                System.out.println("o = " + o);
+//            }
+
+            for (String s : result) {
                 System.out.println("s = " + s);
             }
+
+//            System.out.println("result = " + result);
 
             tx.commit();
         } catch (Exception e) {
