@@ -233,7 +233,11 @@ public class JpaMain {
 //            String query = "select m From Member m join fetch m.team";
 
             // 컬렉션 페치 조인
-            String query = "select t From Team t join fetch t.members";
+//            String query = "select t From Team t join fetch t.members";
+            // 같은 식별자를 가진 Team 엔티티를 제거
+            String query = "select distinct t From Team t join fetch t.members";
+
+            // 일반조인과 페치조인의 차이 -> 일반조인은 연관된 엔티티를 조회하지 않음(SELECT 절에 지정한 엔티티만 조회할뿐)
 
 //            String query = "select t.members.size From Team t";
             
@@ -261,12 +265,14 @@ public class JpaMain {
 //
 //                // 만약 회원100명 -> N + 1 (+1인 이유는 첫번째로 날리는 쿼리에 대한 결과[비교를 위해])
 //            }
-            for (Team team : result) {
-                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
-                for (Member member : team.getMembers()) {
-                    System.out.println("-> member = " + member);
-                }
-            }
+//            for (Team team : result) {
+//                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
+//                for (Member member : team.getMembers()) {
+//                    System.out.println("-> member = " + member);
+//                }
+//            }
+
+            System.out.println("result = " + result.size());
 
 //            System.out.println("result = " + result);
 
