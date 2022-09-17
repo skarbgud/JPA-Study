@@ -101,27 +101,27 @@ public class JpaMain {
 //                em.persist(member);
 //            }
 
-            Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
-
-            Member member = new Member();
-            member.setUsername("관리자");
-            member.setAge(10);
-            member.setType(MemberType.ADMIN);
-
-            Member member2 = new Member();
-            member2.setUsername("관리자2");
-            member2.setAge(10);
-            member2.setType(MemberType.ADMIN);
-
-            member.setTeam(team);
-
-            em.persist(member);
-            em.persist(member2);
-
-            em.flush();
-            em.clear();
+//            Team team = new Team();
+//            team.setName("teamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("관리자");
+//            member.setAge(10);
+//            member.setType(MemberType.ADMIN);
+//
+//            Member member2 = new Member();
+//            member2.setUsername("관리자2");
+//            member2.setAge(10);
+//            member2.setType(MemberType.ADMIN);
+//
+//            member.setTeam(team);
+//
+//            em.persist(member);
+//            em.persist(member2);
+//
+//            em.flush();
+//            em.clear();
 
 //            String query = "select m from Member m inner join m.team t"; // inner 는 생략 가능
 //            String query = "select m from Member m left outer join m.team t"; // outer 는 생략 가능
@@ -183,15 +183,35 @@ public class JpaMain {
 //            String functionQuery = "select substring(m.username, 2, 3) from Member m";
 //            String functionQuery = "select locate('de','abcdefg') from Member m";
 //            String functionQuery = "select function('group_concat', m.username) from Member m";
-            String functionQuery = "select group_concat(m.username) from Member m";
+//            String functionQuery = "select group_concat(m.username) from Member m";
+//
+//            List<String> result = em.createQuery (functionQuery , String.class)
+//                            .getResultList();
+//
+//            for (String s : result) {
+//                System.out.println("s = " + s);
+//            }
 
-            List<String> result = em.createQuery (functionQuery , String.class)
+            Member member1 = new Member();
+            member1.setUsername("관리자1");
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("관리자2");
+            em.persist(member2);
+
+            em.flush();
+            em.clear();
+
+            // 단일 값 연관 경로 : 묵시적 내부 조인(inner join) 발생, 탐색 O
+            String query = "select m.team From Member m";
+            
+            List<Team> result = em.createQuery(query, Team.class)
                             .getResultList();
-
-            for (String s : result) {
+            
+            for (Team s : result) {
                 System.out.println("s = " + s);
             }
-
 
             tx.commit();
         } catch (Exception e) {
