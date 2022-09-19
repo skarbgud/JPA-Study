@@ -235,7 +235,17 @@ public class JpaMain {
             // 컬렉션 페치 조인
 //            String query = "select t From Team t join fetch t.members";
             // 같은 식별자를 가진 Team 엔티티를 제거
-            String query = "select distinct t From Team t join fetch t.members";
+//            String query = "select distinct t From Team t join fetch t.members";
+            /*
+            페치 조인의 특징과 한계
+            - 페치 조인 대상에는 별칭을 줄 수 없다. (하이버네이트는 가능, 가급적 사용X)
+            - 둘 이상의 컬렉션은 페치 조인 할 수 없다.
+            - 컬렉션을 페치조인하면 페이징 API를 사용할 수 없다.
+            - 모든 것을 페치 조인으로 해결할 수 없음
+            - 페치 조인은 객체 그래프를 유지할 때 사용하면 효과적
+            - 여러 테이블을 조인해서 엔티티가 가진 모양이 아닌 전혀 다른 결과를 내야하면, 페치 조인보다는 일반 조인을 사용하고 사용한 데이터만 DTO로 만들어 사용하는 것이 효과적이다
+             */
+            String query = "select t From Team t";
 
             // 일반조인과 페치조인의 차이 -> 일반조인은 연관된 엔티티를 조회하지 않음(SELECT 절에 지정한 엔티티만 조회할뿐)
 
@@ -250,6 +260,8 @@ public class JpaMain {
 //                    .getResultList();
 
             List<Team> result = em.createQuery(query, Team.class)
+                    .setFirstResult(0) // 컬렉션을 페치 조인하면 페이징API(setFirstResult, setMaxResults)를 사용할 수 없다.
+                    .setMaxResults(2)
                     .getResultList();
             
 //            for (Object o : result) {
@@ -265,14 +277,17 @@ public class JpaMain {
 //
 //                // 만약 회원100명 -> N + 1 (+1인 이유는 첫번째로 날리는 쿼리에 대한 결과[비교를 위해])
 //            }
-//            for (Team team : result) {
-//                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
-//                for (Member member : team.getMembers()) {
-//                    System.out.println("-> member = " + member);
-//                }
-//            }
 
             System.out.println("result = " + result.size());
+
+            for (Team team : result) {
+                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
+                for (Member member : team.getMembers()) {
+                    System.out.println("-> member = " + member);
+                }
+            }
+
+//            System.out.println("result = " + result.size());
 
 //            System.out.println("result = " + result);
 
