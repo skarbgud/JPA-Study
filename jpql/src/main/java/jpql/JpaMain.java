@@ -202,22 +202,43 @@ public class JpaMain {
             em.persist(teamB);
 
             Member member1 = new Member();
+            member1.setAge(0);
             member1.setUsername("회원1");
             member1.setTeam(teamA);
             em.persist(member1);
 
             Member member2 = new Member();
+            member2.setAge(0);
             member2.setUsername("회원2");
             member2.setTeam(teamA);
             em.persist(member2);
 
             Member member3 = new Member();
+            member3.setAge(0);
             member3.setUsername("회원3");
             member3.setTeam(teamB);
             em.persist(member3);
 
-            em.flush();
+//            em.flush();
+//            em.clear();
+
+            // 벌크 연산은 영속성 컨텍스트를 무시하고 데이터베이스에 직접 쿼리
+            // FLUSH 자동 호출 (commit, query, flush 호출)
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
+
+            // DB에는 20으로 세팅이 되어있음
+            // 연산후에 영속성 컨텍스트를 초기화 해야함
             em.clear();
+
+            System.out.println("resultCount = " + resultCount);
+
+            System.out.println("member1.getAge() = " + member1.getAge());
+            System.out.println("member2.getAge() = " + member2.getAge());
+            System.out.println("member3.getAge() = " + member3.getAge());
+
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("findMember.getAge() = " + findMember.getAge());
 
             // 단일 값 연관 경로 : 묵시적 내부 조인(inner join) 발생, 탐색 O
             // 컬렉션 값 연관 경로 : 묵시적 내부 조인 발생, 탐색 X
@@ -247,10 +268,10 @@ public class JpaMain {
              */
 //            String query = "select t From Team t";
             // JPQL에서 엔티티를 직접 사용하면 SQL에서 해당 엔티티의 기본 키 값을 사용
-            String query = "select m From Member m where m = :member"; //  select m from Member m where m.id = :memberId 랑 같음
+//            String query = "select m From Member m where m = :member"; //  select m from Member m where m.id = :memberId 랑 같음
 
             // FK 값도 엔티티로 직접 사용 할 수 있다.
-            String foreignQuery = "select m from Member m where m.team = :team";
+//            String foreignQuery = "select m from Member m where m.team = :team";
 
 
             // 일반조인과 페치조인의 차이 -> 일반조인은 연관된 엔티티를 조회하지 않음(SELECT 절에 지정한 엔티티만 조회할뿐)
@@ -285,13 +306,13 @@ public class JpaMain {
 //            }
 
             // 어플리케이션을 로딩하는 시점에서 오류가 난다!
-            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
-                    .setParameter("username", "회원1")
-                            .getResultList();
-
-            for (Member member : resultList) {
-                System.out.println("member = " + member);
-            }
+//            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+//                    .setParameter("username", "회원1")
+//                            .getResultList();
+//
+//            for (Member member : resultList) {
+//                System.out.println("member = " + member);
+//            }
 
 //            for (Object o : result) {
 //                System.out.println("o = " + o);
