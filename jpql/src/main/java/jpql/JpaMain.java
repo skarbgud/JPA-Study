@@ -276,11 +276,20 @@ public class JpaMain {
 //
 //            System.out.println("findMember = " + findMember);
 
-            List<Member> members = em.createQuery(foreignQuery, Member.class)
-                    .setParameter("team", teamA)
+//            List<Member> members = em.createQuery(foreignQuery, Member.class)
+//                    .setParameter("team", teamA)
+//                            .getResultList();
+//
+//            for (Member member : members)  {
+//                System.out.println("member = " + member);
+//            }
+
+            // 어플리케이션을 로딩하는 시점에서 오류가 난다!
+            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "회원1")
                             .getResultList();
-            
-            for (Member member : members)  {
+
+            for (Member member : resultList) {
                 System.out.println("member = " + member);
             }
 
