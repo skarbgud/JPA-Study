@@ -245,7 +245,13 @@ public class JpaMain {
             - 페치 조인은 객체 그래프를 유지할 때 사용하면 효과적
             - 여러 테이블을 조인해서 엔티티가 가진 모양이 아닌 전혀 다른 결과를 내야하면, 페치 조인보다는 일반 조인을 사용하고 사용한 데이터만 DTO로 만들어 사용하는 것이 효과적이다
              */
-            String query = "select t From Team t";
+//            String query = "select t From Team t";
+            // JPQL에서 엔티티를 직접 사용하면 SQL에서 해당 엔티티의 기본 키 값을 사용
+            String query = "select m From Member m where m = :member"; //  select m from Member m where m.id = :memberId 랑 같음
+
+            // FK 값도 엔티티로 직접 사용 할 수 있다.
+            String foreignQuery = "select m from Member m where m.team = :team";
+
 
             // 일반조인과 페치조인의 차이 -> 일반조인은 연관된 엔티티를 조회하지 않음(SELECT 절에 지정한 엔티티만 조회할뿐)
 
@@ -259,11 +265,25 @@ public class JpaMain {
 //            List<Member> result = em.createQuery(query, Member.class)
 //                    .getResultList();
 
-            List<Team> result = em.createQuery(query, Team.class)
-                    .setFirstResult(0) // 컬렉션을 페치 조인하면 페이징API(setFirstResult, setMaxResults)를 사용할 수 없다.
-                    .setMaxResults(2)
-                    .getResultList();
+//            List<Team> result = em.createQuery(query, Team.class)
+//                    .setFirstResult(0) // 컬렉션을 페치 조인하면 페이징API(setFirstResult, setMaxResults)를 사용할 수 없다.
+//                    .setMaxResults(2)
+//                    .getResultList();
+
+//            Member findMember = em.createQuery(query, Member.class)
+//                    .setParameter("member", member1)
+//                            .getSingleResult();
+//
+//            System.out.println("findMember = " + findMember);
+
+            List<Member> members = em.createQuery(foreignQuery, Member.class)
+                    .setParameter("team", teamA)
+                            .getResultList();
             
+            for (Member member : members)  {
+                System.out.println("member = " + member);
+            }
+
 //            for (Object o : result) {
 //                System.out.println("o = " + o);
 //            }
@@ -278,14 +298,14 @@ public class JpaMain {
 //                // 만약 회원100명 -> N + 1 (+1인 이유는 첫번째로 날리는 쿼리에 대한 결과[비교를 위해])
 //            }
 
-            System.out.println("result = " + result.size());
-
-            for (Team team : result) {
-                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
-                for (Member member : team.getMembers()) {
-                    System.out.println("-> member = " + member);
-                }
-            }
+//            System.out.println("result = " + result.size());
+//
+//            for (Team team : result) {
+//                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
+//                for (Member member : team.getMembers()) {
+//                    System.out.println("-> member = " + member);
+//                }
+//            }
 
 //            System.out.println("result = " + result.size());
 
